@@ -1,0 +1,50 @@
+@import './styles/utils.scss'; // 다른 scss파일 불러올 떄는 @import 구문 사용
+// 여러 파일에서 사용될 수 있는 Sass 변수 및 믹스인은 다른 파일로 따로 분리하여 작성한 뒤 불러와 사용 가능
+
+.SassComponent {
+    display: flex;
+    background: $oc-gray-2;
+    @include media('<768px') {
+        background: $oc-gray-9;
+    }
+    .box{//일반 Css에서는 .SassComponent .box 와 마찬가지}
+        background: red;
+        cursor: pointer;
+        transition: all 0.3s ease-in;
+    
+        &.red {
+            //.red클래스가 .box와 함께 사용되었을 떄
+            background: $red;
+            @include square(1);
+        }
+        &.orange {
+            background: $orange;
+            @include square(2);
+        }
+        &.yellow {
+            background: $yellow;
+            @include square(3);
+        }
+        &.green {
+            background: $green;
+            @include square(4);
+        }
+        &.blue {
+            background: $blue;
+            @include square(5);
+        }
+        &.indigo {
+            background: $indigo;
+            @include square(6);
+        }
+        &.violet {
+            background: $violet;
+            @include square(7);
+        }
+
+        &:hover{
+            // .box에 마우스를 올렸을 떄
+            background:black;
+        }
+    }
+}
