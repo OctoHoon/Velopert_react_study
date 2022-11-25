@@ -1,0 +1,80 @@
+07. useState를 통해 컴포넌트에서 바뀌는 값 관리하기
+
+리액트 16.8에서 Hooks라는 기능이 도욉되면서 함수형 컴포넌트에서도
+상태를 관리할 수 있게 됨
+
+Hooks 중 하나인 useState 함수에 대해 배워보자
+
+[Counter.js]
+
+function Counter() {
+  return (
+    <div>
+      <h1>0</h1>
+      <button>+1</button>
+      <button>-1</button>
+    </div>
+  );
+}
+
+- 이벤트 설정
+
+function Counter() {
+  const onIncrease = () => {
+    console.log('+1');
+  }
+  const onDecrease = () => {
+    console.log('-1');
+  }
+  return (
+    <div>
+    <h1>0</h1>
+    <button onClick={onIncrease}>+1</button>
+    <button onClick={onDecrease}>-1</button>
+    </div>
+  );
+}
+
+// 리액트에서 엘리먼트에 이벤트를 설정해줄때에는
+on이벤트이름={실행하고싶은함수} 형태로 설정
+*주의! onIncrease() 넣으면 안됨. onIncrease!!
+
+- useState 로 상태 관리하기
+
+import React, { useState } from 'react';
+
+function Counter() {
+  const [number, setNumber] = useState(0);
+  // 첫 번째 원소는 현재 상태, 두 번째 원소는 Setter 함수
+
+  {/* const numberState = useState(0);
+    const number = numberState[0]
+    const setNumber = numberState[1]
+  위와 같이 해도 됨*/}
+
+  const onIncrease = () => {
+    setNumber(number + 1);
+  }
+
+  const onDecrease = () => {
+    setNumber(number - 1);
+  }
+
+  return (
+    <div>
+      <h1>{number}</h1>
+      <button onClick={onIncrease}>+1</button>
+      <button onClick={onDecrease}>-1</button>
+    </div>
+  );
+}
+
+-- 함수형 업데이트 (컴포넌트를 최적화 할 때 사용)
+
+지금은 Setter 함수를 사용 할 때, 업데이트 하고 싶은 새로운 값을 파라미터로
+넣어주고 있는데요, 그 대신에 기존 값을 어떻게 업데이트 할 지에 대한 함수를
+등록하는 방식으로도 값을 업데이트 할 수 있습니다.
+
+const onIncrease = () => {
+    setNumber(prevNumber => prevNumber + 1);
+  }

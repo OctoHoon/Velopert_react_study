@@ -1,0 +1,96 @@
+17. useMemo 를 사용하여 연산한 값 재사용하기
+
+function countActiveUsers(users) {
+  console.log('활성 사용자 수를 세는중...');
+  return users.filter(user => user.active).length;
+}
+
+function App() {
+  const [inputs, setInputs] = useState({
+    username: '',
+    email: ''
+  });
+
+  const { username, email } = inputs;
+  const onChange = e => {
+    const { name, value } = e.target;
+    setInputs({
+      ...inputs,
+      [name]: value
+    });
+  };
+
+  const [users, setUsers] = useState([
+    {
+      id: 1,
+      username: 'velopert',
+      email: 'public.velopert@gmail.com',
+      active: true
+    },
+    {
+      id: 2,
+      username: 'tester',
+      email: 'tester@example.com',
+      active: false
+    },
+    {
+      id: 3,
+      username: 'liz',
+      email: 'liz@example.com',
+      active: false
+    }
+  ]);
+
+  const nextId = useRef(4); // 파라미터가 .current 값의 기본값이 됨. 이를 수정하고 조회할 때 .current  조회하면 됨
+
+  const onCreate = () => {
+    const user = {
+      id: nextId.current,
+      username,
+      email
+    }
+    setUsers([...users, user]);
+
+    setInputs({
+     username: '',
+     email: ''
+   });
+
+    nextId.current += 1;
+  }
+
+  const onRemove = id => {
+    setUsers(users.filter(user => user.id !== id))
+  }
+
+  const onToggle = id => {
+    setUsers(
+      users.map(user =>
+        user.id === id ? {...user, active: !user.active} : user)
+      );
+  };
+
+  const count = countActiveUsers(users);
+
+  return (
+    <>
+      <CreateUser username={username} email={email} onChange={onChange} onCreate={onCreate}/>
+      <UserList users={users} onRemove={onRemove} onToggle={onToggle}/>
+      <div>활성사용자 수: {count}</div>
+    </>
+  );
+}
+
+export default App;
+
+**** users에 변화 있을 때 뿐만 아니라, input 값이 바뀔 때에도
+컴포넌트가 리렌더링 됨. 불필요한 호출!! 자원낭비
+-- useMemo 라는 Hook 함수를 사용해 성능 최적화 가능
+
+** 수정 버전 **
+const count = useMemo(() => countActiveUsers(users), [users]);
+
+useMemo 의 첫번째 파라미터에는 어떻게 연산할지 정의하는 함수를 넣어주면 되고
+두번째 파라미터에는 deps 배열을 넣어주면 되는데, 이 배열 안에 넣은 내용이 바뀌면,
+우리가 등록한 함수를 호출해서 값을 연산해주고, 만약에 내용이 바뀌지 않았다면
+이전에 연산한 값을 재사용하게 됩니다.

@@ -1,0 +1,46 @@
+06. 조건부 렌더링
+: 특정 조건에 따라 다른 결과물을 렌더링 하는 것
+
+
+[App.js]
+
+function App() {
+  return (
+    <Wrapper>
+      <Hello name="react" color="red" isSpecial={true}/> // 자바스크리트 값은 중괄호로 감쌈
+      <Hello color="pink" />
+    </Wrapper>
+  )
+}
+
+==> 간결하게
+// A && B 연산자를 사용하게 될 때에는 A 가 Truthy 한 값이라면, B 가 결과값이 됩니다.
+반면, A 가 Falsy 한 값이라면 결과는 A 가 됩니다
+// A || B 는 만약 A 가 Truthy 할경우 결과는 A 가 됩니다.
+반면, A 가 Falsy 하다면 결과는 B 가 됩니다.
+// JSX 에서 null, false, undefined를 렌더링하면 아무것도 나타나지 않음
+
+function Hello({ color, name, isSpecial }) {
+  return (
+    <div style={{ color }}>
+      {isSpecial && <b>*</b>}
+      안녕하세요 {name}
+    </div>
+  );
+}
+
+
+[Hello.js]
+
+function Hello({ color, name, isSpecial }) {
+  return (
+    <div style={{ color }}>
+      { isSpecial ? <b>*</b> : null }
+      안녕하세요 {name}
+    </div>
+  );
+}
+
+Hello.defaultProps = {
+  name: '이름없음'
+}
